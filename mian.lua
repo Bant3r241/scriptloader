@@ -28,20 +28,31 @@ local KeySystem = Fluent:CreateKeySystem({
             KeySystem:Destroy()
 
             -------------------------------------------------
-            -- GAME LOADER
+            -- GAME LOADER (NO UNIVERSAL FALLBACK)
             -------------------------------------------------
 
             local gameId = game.PlaceId
 
             local scripts = {
                 [114640202062357] = "https://raw.githubusercontent.com/Bant3r241/scriptloader/main/games/Swing To Brainrots.lua",
+                -- Add more game IDs here as needed
             }
 
-            local universal = "https://raw.githubusercontent.com/Bant3r241/scriptloader/main/games/universal.lua"
-
-            local url = scripts[gameId] or universal
-
-            loadstring(game:HttpGet(url))()
+            -- Only load if there's a matching game ID
+            local url = scripts[gameId]
+            
+            if url then
+                loadstring(game:HttpGet(url))()
+            else
+                Fluent:Notify({
+                    Title = "Unsupported Game",
+                    Content = "This game is not supported by Wraith Hub!",
+                    Duration = 5
+                })
+                
+                -- Optional: Destroy the window or keep it open
+                -- KeySystem:Destroy()
+            end
 
             return true
         else
